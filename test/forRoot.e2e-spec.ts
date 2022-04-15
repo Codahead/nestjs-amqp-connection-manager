@@ -90,7 +90,7 @@ describe('Module forRoot (e2e)', () => {
     });
 
     afterAll(async () => {
-      app && app.close();
+      app && (await app.close());
     });
 
     it('should create two separate connections', () => {

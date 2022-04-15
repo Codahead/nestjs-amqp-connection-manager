@@ -5,9 +5,7 @@ export interface AmqpConnectionProviderOptions extends AmqpConnectionManagerOpti
   urls: string | string[];
 }
 
-export type AmqpConnectionSingleInstanceOptions = AmqpConnectionProviderOptions & {
-  name?: AmqpConnectionProviderOptions['name'];
-};
+export type AmqpConnectionSingleInstanceOptions = Optional<AmqpConnectionProviderOptions, 'name'>;
 
 export type AmqpConnectionProviderAsyncOptions =
   | AmqpConnectionProviderSingleAsyncOptions
@@ -17,11 +15,13 @@ export interface AmqpConnectionProviderSingleAsyncOptions {
   inject?: any[];
   name?: string;
   useFactory: ConnectionFactoryFn;
+  imports?: any[];
 }
 
 export interface AmqpConnectionProviderMultipleAsyncOptions {
   inject?: any[];
   providerOptions: AsyncProviderOptions[];
+  imports?: any[];
 }
 
 interface AsyncProviderOptions {
@@ -29,4 +29,7 @@ interface AsyncProviderOptions {
   useFactory: ConnectionFactoryFn;
 }
 
-type ConnectionFactoryFn = (...args: any[]) => Promise<AmqpConnectionProviderOptions> | AmqpConnectionProviderOptions;
+type ConnectionFactoryFn = (
+  ...args: any[]
+) => Promise<AmqpConnectionSingleInstanceOptions> | AmqpConnectionSingleInstanceOptions;
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;

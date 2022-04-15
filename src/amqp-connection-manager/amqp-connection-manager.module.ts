@@ -60,15 +60,16 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
       connectionProviders.push(this.createConnectionProvider(name));
       optionsProviders.push(this.createAsyncOptionsProvider({ ...options, name }));
 
-      connectionNames.push();
+      connectionNames.push(name);
     }
 
     this.connectionNames.push(...connectionNames);
 
     return {
       module: AmqpConnectionManagerModule,
-      providers: [],
-      exports: [],
+      providers: [...connectionProviders, ...optionsProviders],
+      exports: connectionProviders,
+      imports: options.imports,
     };
   }
 
@@ -76,12 +77,11 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
     return new Set(...connectionNames).size === connectionNames.length;
   }
 
-  private static ensureConnectionName(singleInstanceOptions: AmqpConnectionSingleInstanceOptions) {
-    if (singleInstanceOptions.name) {
-      return singleInstanceOptions;
-    }
-
-    return { ...singleInstanceOptions, name: AMQP_CONNECTION_MANAGER_DEFAULT_CONNECTION_NAME };
+  private static ensureConnectionName(
+    singleInstanceOptions: AmqpConnectionSingleInstanceOptions,
+  ): AmqpConnectionProviderOptions {
+    const name = singleInstanceOptions.name || AMQP_CONNECTION_MANAGER_DEFAULT_CONNECTION_NAME;
+    return { ...singleInstanceOptions, name };
   }
 
   private static createOptionsProvider(options: AmqpConnectionProviderOptions): Provider {
@@ -106,7 +106,7 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
     return {
       provide: createOptionsToken(options.name || AMQP_CONNECTION_MANAGER_DEFAULT_CONNECTION_NAME),
       useFactory: options.useFactory,
-      inject: options.inject,
+      inject: options.inject || [],
     };
   }
 
