@@ -100,8 +100,8 @@ describe('Module forRootAsync (e2e)', () => {
         imports: [
           AmqpConnectionManagerModule.forRootAsync({
             providerOptions: [
-              { useFactory: factory, name: FIRST_CONNECTION_NAME },
-              { useFactory: factory, name: SECOND_CONNECTION_NAME },
+              { useFactory: factory, name: FIRST_CONNECTION_NAME, inject: [ConfigServiceProvider] },
+              { useFactory: factory, name: SECOND_CONNECTION_NAME, inject: [ConfigServiceProvider] },
             ],
             inject: [ConfigServiceProvider],
             imports: [ConfigServiceModule],

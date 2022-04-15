@@ -19,7 +19,6 @@ export interface AmqpConnectionProviderSingleAsyncOptions {
 }
 
 export interface AmqpConnectionProviderMultipleAsyncOptions {
-  inject?: any[];
   providerOptions: AsyncProviderOptions[];
   imports?: any[];
 }
@@ -27,6 +26,7 @@ export interface AmqpConnectionProviderMultipleAsyncOptions {
 interface AsyncProviderOptions {
   name: string;
   useFactory: ConnectionFactoryFn;
+  inject?: any[];
 }
 
 type ConnectionFactoryFn = (
