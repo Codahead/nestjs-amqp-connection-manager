@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, Injectable, Module } from '@nestjs/common';
-import { AmqpConnectionManagerModule, IAmqpConnectionManager, InjectAmqpConnection } from '../src/main';
+import { AmqpConnectionManagerModule, IAmqpConnectionManager, InjectAmqpManager } from '../src/main';
 import { testConfig } from './config';
 
 describe('Module forRoot (e2e)', () => {
@@ -9,7 +9,7 @@ describe('Module forRoot (e2e)', () => {
 
     @Injectable()
     class AmqpService {
-      constructor(@InjectAmqpConnection(CONNECTION_NAME) public readonly connection: IAmqpConnectionManager) {}
+      constructor(@InjectAmqpManager(CONNECTION_NAME) public readonly connection: IAmqpConnectionManager) {}
     }
 
     let service: AmqpService;
@@ -58,8 +58,8 @@ describe('Module forRoot (e2e)', () => {
     @Injectable()
     class AmqpService {
       constructor(
-        @InjectAmqpConnection(FIRST_CONNECTION_NAME) public readonly connection1: IAmqpConnectionManager,
-        @InjectAmqpConnection(SECOND_CONNECTION_NAME) public readonly connection2: IAmqpConnectionManager,
+        @InjectAmqpManager(FIRST_CONNECTION_NAME) public readonly connection1: IAmqpConnectionManager,
+        @InjectAmqpManager(SECOND_CONNECTION_NAME) public readonly connection2: IAmqpConnectionManager,
       ) {}
     }
 
