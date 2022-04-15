@@ -135,3 +135,10 @@ class AmqpService {
 ```
 
 Decorator parameter may be omitted if only one connection was created and its name was not overridden.
+
+### Amqplib and amqp-connection-manager
+
+To learn how to use amqplib and amqp-connection-manager you can head to:
+
+- [RabbitMQ documentation](https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html)
+- [AMQP connection manager GitHub page](https://github.com/jwalton/node-amqp-connection-manager)
