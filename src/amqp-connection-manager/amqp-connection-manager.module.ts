@@ -116,7 +116,7 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
     return Array.isArray((<AmqpConnectionProviderMultipleAsyncOptions>options).providerOptions);
   }
 
-  async onModuleDestroy() {
+  public async onModuleDestroy() {
     const connectionClosePromises = AmqpConnectionManagerModule.connectionNames.map(async (connectionName) => {
       const connection = this.moduleRef.get<IAmqpConnectionManager>(createConnectionToken(connectionName));
       await connection.close();
