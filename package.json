@@ -4,7 +4,9 @@
   "description": "Wrapper around amqp-connection-manager working as a NestJS module",
   "author": "Jakub Surdej <jakub.surdej@codahead.com>",
   "license": "MIT",
+  "main": "dist/main.js",
   "scripts": {
+    "prepack": "yarn build",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
