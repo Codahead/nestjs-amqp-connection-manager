@@ -1,7 +1,7 @@
 {
   "name": "@codahead/nestjs-amqp-connection-manager",
   "version": "0.0.1",
-  "description": "Wrapper around amqp-connection-manager working as NestJS module",
+  "description": "Wrapper around amqp-connection-manager working as a NestJS module",
   "author": "Jakub Surdej <jakub.surdej@codahead.com>",
   "license": "MIT",
   "scripts": {

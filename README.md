@@ -37,7 +37,7 @@ and multiple connections using both `forRoot` and `forRootAsync` methods.
 Creating single connection example:
 
 ```ts
-import { AmqpConnectionManagerModule } from '<library-name>'; 
+import { AmqpConnectionManagerModule } from "@codahead/nestjs-amqp-connection-manager"; 
 const CONNECTION_NAME = 'connection1';
 
 @Module({
@@ -50,7 +50,7 @@ class AppModule {}
 Creating multiple connections example:
 
 ```ts
-import { AmqpConnectionManagerModule } from '<library-name>'; 
+import { AmqpConnectionManagerModule } from "@codahead/nestjs-amqp-connection-manager"; 
 const FIRST_CONNECTION_NAME = 'connection1';
 const SECOND_CONNECTION_NAME = 'connection2';
 
@@ -66,7 +66,7 @@ class AppModule {}
 Creating single connection example:
 
 ```ts
-import { AmqpConnectionManagerModule } from '<library-name>'; 
+import { AmqpConnectionManagerModule } from "@codahead/nestjs-amqp-connection-manager"; 
 const CONNECTION_NAME = 'connection1';
 
 @Injectable()
@@ -123,7 +123,7 @@ class AppModule {}
 Connection can be injected using `InjectAmqpConnection` decorator.
 
 ```ts
-import { InjectAmqpManager } from '<library-name>'; 
+import { InjectAmqpManager } from "@codahead/nestjs-amqp-connection-manager"; 
 
 // [...]
 
