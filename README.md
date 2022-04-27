@@ -14,13 +14,15 @@ The project provides wrapper on `amqp-connection-manager` allowing to easily use
 npm:
 
 ```sh
-npm i <library-name>
+npm i @codahead/nestjs-amqp-connection-manager amqp-connection-manager amqplib
+npm i --save-dev @types/amqplib
 ```
 
 yarn:
 
 ```sh
-yarn add <library-name>
+yarn add @codahead/nestjs-amqp-connection-manager amqp-connection-manager amqplib
+yarn add -D @types/amqplib
 ```
 
 ## Usage
