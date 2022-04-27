@@ -1,4 +1,4 @@
-import { DynamicModule, Module, OnModuleDestroy, Provider } from '@nestjs/common';
+import { DynamicModule, Logger, Module, OnModuleDestroy, Provider } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { connect } from 'amqp-connection-manager';
 import { IAmqpConnectionManager } from 'amqp-connection-manager/dist/esm/AmqpConnectionManager';
@@ -14,6 +14,7 @@ import { createConnectionToken, createOptionsToken } from './utils/create.tokens
 
 @Module({})
 export class AmqpConnectionManagerModule implements OnModuleDestroy {
+  private static logger = new Logger(AmqpConnectionManagerModule.name);
   private static connectionNames: string[] = [];
 
   constructor(private readonly moduleRef: ModuleRef) {}
@@ -29,15 +30,10 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
     const optionsProviders = optionsArray.map(this.createOptionsProvider);
 
     return {
+      global: true,
       module: AmqpConnectionManagerModule,
       providers: [...connectionProviders, ...optionsProviders],
       exports: connectionProviders,
-    };
-  }
-
-  public static forFeature() {
-    return {
-      module: AmqpConnectionManagerModule,
     };
   }
 
@@ -67,6 +63,7 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
 
     return {
       module: AmqpConnectionManagerModule,
+      global: true,
       providers: [...connectionProviders, ...optionsProviders],
       exports: connectionProviders,
       imports: options.imports,
@@ -95,11 +92,29 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
     return {
       provide: createConnectionToken(connectionName),
       useFactory: (config: AmqpConnectionProviderOptions) => {
-        const { urls, ...connectionOptions } = config;
-        return connect(urls, connectionOptions);
+        return AmqpConnectionManagerModule.createConnection(config);
       },
       inject: [createOptionsToken(connectionName)],
     };
+  }
+
+  private static createConnection(config: AmqpConnectionProviderOptions) {
+    const { urls, ...connectionOptions } = config;
+    const connection = connect(urls, connectionOptions);
+
+    connection.on('connect', () => {
+      AmqpConnectionManagerModule.logger.log(`Connection ${config.name} connected`);
+    });
+
+    connection.on('connectFailed', ({ err }) => {
+      AmqpConnectionManagerModule.logger.error(`Connection ${config.name} failed to connect`);
+      AmqpConnectionManagerModule.logger.error(err);
+    });
+
+    connection.on('disconnect', ({ err }) => {
+      AmqpConnectionManagerModule.logger.error(`Connection ${config.name} disconnected`);
+      AmqpConnectionManagerModule.logger.error(err);
+    });
   }
 
   private static createAsyncOptionsProvider(options: AmqpConnectionProviderSingleAsyncOptions): Provider {
