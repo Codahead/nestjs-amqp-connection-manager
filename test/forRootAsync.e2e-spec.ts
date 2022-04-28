@@ -7,6 +7,9 @@ import {
   InjectAmqpManager,
 } from '../src/main';
 import { testConfig } from './config';
+import { testConnection } from './test/channel.utils';
+import { Channel } from 'amqplib';
+import { randomUUID } from 'crypto';
 
 describe('Module forRootAsync (e2e)', () => {
   @Injectable()
@@ -66,13 +69,7 @@ describe('Module forRootAsync (e2e)', () => {
       const { connection } = service;
 
       expect(connection).toBeDefined();
-    });
-
-    it('should allow the connection to create channel', async () => {
-      const { connection } = service;
-
-      const channel = connection.createChannel();
-      expect(channel.assertQueue('test-queue')).resolves.not.toThrow();
+      await testConnection(connection);
     });
   });
 
@@ -130,6 +127,31 @@ describe('Module forRootAsync (e2e)', () => {
     it('should create two separate connections', () => {
       const { connection1, connection2 } = service;
       expect(connection1).not.toBe(connection2);
+    });
+
+    it('should have two fully operational connections', async () => {
+      const queueName = randomUUID();
+      const { connection1, connection2 } = service;
+
+      await new Promise((res) =>
+        connection1.createChannel({
+          setup: async (channel: Channel) => {
+            await channel.assertQueue(queueName);
+            await channel.close();
+            res(channel);
+          },
+        }),
+      );
+
+      await new Promise((res) =>
+        connection2.createChannel({
+          setup: async (channel: Channel) => {
+            await channel.deleteQueue(queueName);
+            await channel.close();
+            res(channel);
+          },
+        }),
+      );
     });
   });
 });
