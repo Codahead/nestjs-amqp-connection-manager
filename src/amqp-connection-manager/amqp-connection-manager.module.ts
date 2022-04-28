@@ -115,6 +115,8 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
       AmqpConnectionManagerModule.logger.error(`Connection ${config.name} disconnected`);
       AmqpConnectionManagerModule.logger.error(err);
     });
+
+    return connection;
   }
 
   private static createAsyncOptionsProvider(options: AmqpConnectionProviderSingleAsyncOptions): Provider {
