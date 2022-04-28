@@ -103,17 +103,17 @@ export class AmqpConnectionManagerModule implements OnModuleDestroy {
     const connection = connect(urls, connectionOptions);
 
     connection.on('connect', () => {
-      AmqpConnectionManagerModule.logger.log(`Connection ${config.name} connected`);
+      this.logger.log(`Connection ${config.name} connected`);
     });
 
     connection.on('connectFailed', ({ err }) => {
-      AmqpConnectionManagerModule.logger.error(`Connection ${config.name} failed to connect`);
-      AmqpConnectionManagerModule.logger.error(err);
+      this.logger.error(`Connection ${config.name} failed to connect`);
+      this.logger.error(err);
     });
 
     connection.on('disconnect', ({ err }) => {
-      AmqpConnectionManagerModule.logger.error(`Connection ${config.name} disconnected`);
-      AmqpConnectionManagerModule.logger.error(err);
+      this.logger.error(`Connection ${config.name} disconnected`);
+      this.logger.error(err);
     });
 
     return connection;
