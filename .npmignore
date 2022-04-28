@@ -17,3 +17,5 @@ tsconfig.*.json
 */*.tsbuildinfo
 .github
 CHANGELOG.md
+.env.*
+.env
